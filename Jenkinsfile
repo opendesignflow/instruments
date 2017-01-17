@@ -28,9 +28,18 @@ node {
   }
 
   if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'master') {
+
     stage('Deploy') {
         sh "${mvnHome}/bin/mvn -B -DskipTests=true -Dmaven.test.failure.ignore deploy"
         step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
+    }
+
+    stage("Deploy Documentation") {
+
+        sh "make -C doc html"
+        sh "mkdir -p /data/cd/org.odfi.instruments/instruments-core/${env.BRANCH_NAME}/doc/"
+        sh "cp -Rf doc/build/html/* /data/cd/org.odfi.instruments/instruments-core/${env.BRANCH_NAME}/doc/"
+        
     }
 
   } else {
