@@ -51,6 +51,23 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
   def isSerial = {
     this.getId.startsWith("ASRL")
   }
+  
+  // USB
+  //-----------
+  def getVendorID = {
+    require(isUSB)
+    this.getId.split("::")(1)
+  }
+  
+  def getProductID = {
+    require(isUSB)
+    this.getId.split("::")(2)
+  }
+  
+  def getModelID = {
+    require(isUSB)
+    this.getId.split("::")(3)
+  }
 
   // I/O
   //-----------------

@@ -6,12 +6,20 @@ import org.odfi.instruments.osci.OSCIUI
 
 object TektronixHarvester extends Harvester {
 
-
   this.onDeliverFor[VISADevice] {
-    case r =>
+    case r if (r.isUSB) =>
 
-      println(s"TEK H delivered device")
-      r.getDeviceId match {
+      println(s"TEK H delivered SUB device")
+      
+      (r.getVendorID,r.getModelID) match {
+        case ("0x0699","C024106") => 
+          gather(new TekTronixOsci(r))
+          true
+        case other => 
+          false
+      }
+      
+      /*r.getDeviceId match {
         case id if (id.startsWith("TEKTRONIX") && id.contains("MDO3024")) =>
           gather(new TekTronixOsci(r).deriveFrom(r))
           true
@@ -19,8 +27,7 @@ object TektronixHarvester extends Harvester {
 
           println(s"TEK H delivered device, not a TEK device: " + o)
           false
-      }
+      }*/
   }
-
 
 }

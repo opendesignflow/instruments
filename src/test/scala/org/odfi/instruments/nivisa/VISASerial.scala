@@ -8,6 +8,12 @@ object VISASerial extends App {
     var h = VISAHarvester
   h.harvest
   
+  VISASerialHarvester.getResources.foreach {
+      r => 
+        
+    }
+  
+  
   VISASerialHarvester.getResource[VISASerialDevice] match {
       case Some(firstSerial) =>
         println("FOund serial: "+firstSerial.getId)
