@@ -27,8 +27,8 @@ object VISAHarvester extends Harvester {
   //------------
   OSDetector.isWindows() match {
     case true =>
-      //BridJ.setNativeLibraryActualName("visa", "nivisa64")
-      BridJ.setNativeLibraryActualName("visa", "visa64")
+      BridJ.setNativeLibraryActualName("visa", "nivisa64")
+      //BridJ.setNativeLibraryActualName("visa", "visa64")
     case false =>
   }
 
