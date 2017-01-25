@@ -43,7 +43,7 @@ object VISAHarvester extends Harvester {
   //---------------
   override def doHarvest = {
 
-    println(s"Harvesting Devices")
+   // println(s"Harvesting Devices")
     //throw new RuntimeException("Test")
 
     //-- Get List of devices
