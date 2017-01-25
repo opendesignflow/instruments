@@ -19,6 +19,8 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
     case None => open
   }
   
+  def isOpen = this.deviceSession.isDefined
+  
   def open = {
 
     //-- Prepare Session or isntrument
