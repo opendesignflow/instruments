@@ -1,0 +1,7 @@
+/target/
+doc/build/
+.cache-main
+.cache-tests
+.classpath
+_jnaerator.*
+.settings/
