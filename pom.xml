@@ -12,6 +12,9 @@
 	</parent>
 
 	<build>
+
+	
+	
 		<plugins>
 			<!-- Generate native interfaces -->
 			<plugin>
@@ -42,6 +45,7 @@
 						<configuration>
 							<sources>
 								<source>${project.build.directory}/generated-sources/java</source>
+								<source>src/examples/scala</source>
 							</sources>
 						</configuration>
 					</execution>
@@ -53,6 +57,7 @@
 						<configuration>
 							<sources>
 								<source>${project.build.directory}/generated-sources/java</source>
+								<source>src/examples/scala</source>
 							</sources>
 						</configuration>
 					</execution>
