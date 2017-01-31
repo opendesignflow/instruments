@@ -111,7 +111,7 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
       requireOpen
       
       //-- Discard Input Buffer to make sure we only get the result of the command
-      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF)
+      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF.toShort)
 
       this.write(command)
 
@@ -128,7 +128,7 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
       requireOpen
       
       //-- Discard Input Buffer to make sure we only get the result of the command
-      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF)
+      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF.toShort)
 
       this.write(command)
       new String(this.readBytes).toDouble
@@ -141,7 +141,7 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
       requireOpen
       
       //-- Discard Input Buffer to make sure we only get the result of the command
-      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF)
+      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF.toShort)
       this.write(command)
       this.readBytes
     }
@@ -207,7 +207,7 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
       }
 
       //-- FLush
-      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_WRITE_BUF)
+      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_WRITE_BUF.toShort)
     }
   }
 
