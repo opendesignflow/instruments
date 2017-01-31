@@ -11,8 +11,9 @@ object SerialDeviceExample extends App {
 
     // Use Serial Harvester to list serial devices
     VISASerialHarvester.getResources.foreach {
-        resource =>
-            println("Found resource on VISA Serial")
+      case resource : VISASerialDevice =>
+            println("Found resource on VISA Serial: "+resource.getInterfaceDescription)
+      case _ => 
     }
 
     // Use Serial Harvester and look for specific VISASerial Resource
@@ -21,7 +22,8 @@ object SerialDeviceExample extends App {
         case Some(firstSerial) =>
 
              // This will send "test" to the port and wait for a response line
-             var received = firstSerial.readString("test")
+             //var received = firstSerial.readString("test")
+          println("Found Serial Port: "+firstSerial.getInterfaceDescription)
 
         case None =>
             println("No Serial Listed in VISA")

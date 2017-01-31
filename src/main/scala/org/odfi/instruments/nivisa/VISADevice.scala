@@ -8,25 +8,51 @@ import java.io.ByteArrayOutputStream
 
 class VISADevice(val deviceString: String) extends MeasurementDevice {
 
-  def this(d : VISADevice) = this(d.deviceString)
-  
+  def this(d: VISADevice) = this(d.deviceString)
+
   var deviceSession: Option[Long] = None
 
+  // ID And descriptions
   def getId = deviceString
 
+  /**
+   * This method will open the interface if not openend and close it again
+   * If the interface is openend, it won't close it
+   */
+  def getInterfaceDescription = {
+
+    var desc = isOpen match {
+      case true =>
+        var description = Pointer.allocateChars(256)
+        VisaLibrary.viGetAttribute(deviceSession.get, VisaLibrary.VI_ATTR_INTF_INST_NAME, description)
+        description.getCString
+      case false =>
+        try {
+          requireOpen
+          var description = Pointer.allocateChars(256)
+          VisaLibrary.viGetAttribute(deviceSession.get, VisaLibrary.VI_ATTR_INTF_INST_NAME, description)
+          description.getCString
+        } catch {
+          case e: Throwable => "Error while reading description: " + e.getLocalizedMessage
+        }
+    }
+    desc
+
+  }
+
   def requireOpen = deviceSession match {
-    case Some(session) => 
+    case Some(session) =>
     case None => open
   }
-  
+
   def isOpen = this.deviceSession.isDefined
-  
+
   def open = {
 
     //-- Prepare Session or isntrument
     var instrumentSession = Pointer.allocateCLong()
     VisaLibrary.viOpen(VISA.getResourceManagerHandler, Pointer.pointerToCString(deviceString), VisaLibrary.VI_NULL, VisaLibrary.VI_NULL, instrumentSession) match {
-    
+
       case 0 =>
         println(s"Opened Device: ${deviceString}")
         sys.addShutdownHook(this.close)
@@ -39,12 +65,12 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
   }
 
   def close = deviceSession match {
-    case Some(session) => 
+    case Some(session) =>
       this.deviceSession = None
       VisaLibrary.viClose(session)
-    case None => 
+    case None =>
   }
-  
+
   // Type
   //--------------
   def isUSB = {
@@ -53,19 +79,19 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
   def isSerial = {
     this.getId.startsWith("ASRL")
   }
-  
+
   // USB
   //-----------
   def getVendorID = {
     require(isUSB)
     this.getId.split("::")(1)
   }
-  
+
   def getProductID = {
     require(isUSB)
     this.getId.split("::")(2)
   }
-  
+
   def getModelID = {
     require(isUSB)
     this.getId.split("::")(3)
@@ -128,7 +154,7 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
    */
   def write(command: String): Unit = {
     requireOpen
-    
+
     var finalCommand = command.last match {
       case '\n' => command
       case _ => command + "\n"
