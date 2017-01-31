@@ -28,9 +28,14 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
         description.getCString
       case false =>
         try {
+          
+          // Open - Ask - Close
           requireOpen
           var description = Pointer.allocateChars(256)
           VisaLibrary.viGetAttribute(deviceSession.get, VisaLibrary.VI_ATTR_INTF_INST_NAME, description)
+          
+          close
+          
           description.getCString
         } catch {
           case e: Throwable => "Error while reading description: " + e.getLocalizedMessage
