@@ -28,14 +28,14 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
         description.getCString
       case false =>
         try {
-          
+
           // Open - Ask - Close
           requireOpen
           var description = Pointer.allocateChars(256)
           VisaLibrary.viGetAttribute(deviceSession.get, VisaLibrary.VI_ATTR_INTF_INST_NAME, description)
-          
+
           close
-          
+
           description.getCString
         } catch {
           case e: Throwable => "Error while reading description: " + e.getLocalizedMessage
@@ -124,33 +124,36 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
   }
 
   def readBytes: Array[Byte] = {
+    this.synchronized {
 
-    //-- Read
-    var resBytes = new ByteArrayOutputStream
-    var readBuffer = Pointer.allocateBytes(4096)
-    var readCount = Pointer.allocateCLong()
-    var continue = true
-    while (continue) {
-      VisaLibrary.viRead(deviceSession.get, readBuffer, 4096, readCount) match {
-        case 0 =>
-          println(s"Read: ${readCount.getInt}")
-          resBytes.write(readBuffer.getBytes(readCount.getInt))
-          continue = false
-        //Some(new String(readBuffer.getBytes(readCount.getInt).dropRight(1)))
+      //-- Read
+      var resBytes = new ByteArrayOutputStream
+      var readBuffer = Pointer.allocateBytes(4096)
+      var readCount = Pointer.allocateCLong()
+      var continue = true
+      while (continue) {
+        VisaLibrary.viRead(deviceSession.get, readBuffer, 4096, readCount) match {
+          case 0 =>
+            println(s"Read: ${readCount.getInt}")
+            resBytes.write(readBuffer.getBytes(readCount.getInt))
+            continue = false
+          //Some(new String(readBuffer.getBytes(readCount.getInt).dropRight(1)))
 
-        // Maybe more available
-        case 1073676294 =>
+          // Maybe more available
+          case 1073676294 =>
 
-          // Write and continue
-          resBytes.write(readBuffer.getBytes(readCount.getInt))
-          continue = true
+            // Write and continue
+            resBytes.write(readBuffer.getBytes(readCount.getInt))
+            continue = true
 
-        case other =>
-          throw new RuntimeException(s"Error While Reading data to device $deviceString, code=$other, message=${VISA.getStatusDesc(other)}")
+          case other =>
+            throw new RuntimeException(s"Error While Reading data to device $deviceString, code=$other, message=${VISA.getStatusDesc(other)}")
+        }
       }
-    }
 
-    resBytes.toByteArray()
+      resBytes.toByteArray()
+
+    }
 
   }
 
@@ -158,25 +161,26 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
    * \n is added to the end of string if required
    */
   def write(command: String): Unit = {
-    requireOpen
+    this.synchronized {
+      requireOpen
 
-    var finalCommand = command.last match {
-      case '\n' => command
-      case _ => command + "\n"
-    }
+      var finalCommand = command.last match {
+        case '\n' => command
+        case _ => command + "\n"
+      }
 
-    //-- Write
-    var totalWritten = 0
-    while (totalWritten < finalCommand.length()) {
-      var written = Pointer.allocateCLong()
-      VisaLibrary.viWrite(deviceSession.get, Pointer.pointerToCString(finalCommand), finalCommand.length().toLong, written) match {
-        case 0 =>
-          totalWritten += written.getInt
-        case other =>
-          throw new RuntimeException(s"Error While Writting data to device $deviceString, code=$other ")
+      //-- Write
+      var totalWritten = 0
+      while (totalWritten < finalCommand.length()) {
+        var written = Pointer.allocateCLong()
+        VisaLibrary.viWrite(deviceSession.get, Pointer.pointerToCString(finalCommand), finalCommand.length().toLong, written) match {
+          case 0 =>
+            totalWritten += written.getInt
+          case other =>
+            throw new RuntimeException(s"Error While Writting data to device $deviceString, code=$other ")
+        }
       }
     }
-
   }
 
   // Utils
