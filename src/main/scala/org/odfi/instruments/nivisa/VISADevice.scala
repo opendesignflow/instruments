@@ -106,26 +106,51 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
   //-----------------
 
   def readString(command: String): String = {
-    this.write(command)
+    this.synchronized {
+      
+      requireOpen
+      
+      //-- Discard Input Buffer to make sure we only get the result of the command
+      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF)
 
-    // Read bytes as string 
-    new String(this.readBytes)
+      this.write(command)
+
+      // Read bytes as string 
+      new String(this.readBytes)
+
+    }
 
   }
 
   def readDouble(command: String): Double = {
-    this.write(command)
-    new String(this.readBytes).toDouble
+    this.synchronized {
+      
+      requireOpen
+      
+      //-- Discard Input Buffer to make sure we only get the result of the command
+      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF)
+
+      this.write(command)
+      new String(this.readBytes).toDouble
+    }
   }
 
   def readBytes(command: String): Array[Byte] = {
-    this.write(command)
-    this.readBytes
+
+    this.synchronized {
+      requireOpen
+      
+      //-- Discard Input Buffer to make sure we only get the result of the command
+      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_READ_BUF)
+      this.write(command)
+      this.readBytes
+    }
   }
 
   def readBytes: Array[Byte] = {
     this.synchronized {
-
+      requireOpen
+      
       //-- Read
       var resBytes = new ByteArrayOutputStream
       var readBuffer = Pointer.allocateBytes(4096)
@@ -180,6 +205,9 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
             throw new RuntimeException(s"Error While Writting data to device $deviceString, code=$other ")
         }
       }
+
+      //-- FLush
+      VisaLibrary.viFlush(deviceSession.get, VisaLibrary.VI_WRITE_BUF)
     }
   }
 
