@@ -4,7 +4,7 @@ import org.odfi.indesign.core.module.IndesignModule
 import org.bridj.BridJ
 import org.odfi.indesign.core.harvest.Harvest
 
-class VISAModule extends IndesignModule{
+object VISAModule extends IndesignModule{
   
   
   def load = {
