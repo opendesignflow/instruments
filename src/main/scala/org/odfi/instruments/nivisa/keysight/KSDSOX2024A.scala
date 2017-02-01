@@ -1,5 +1,9 @@
 package org.odfi.instruments.nivisa.keysight
 
+import java.io.{ByteArrayInputStream, File}
+import javax.imageio.ImageIO
+
+import com.idyria.osi.tea.io.TeaIOUtils
 import org.odfi.instruments.nivisa.VISADevice
 import org.odfi.instruments.nivisa.keysight.waveform.{Preamble, Waveform}
 
@@ -8,18 +12,15 @@ import org.odfi.instruments.nivisa.keysight.waveform.{Preamble, Waveform}
   */
 class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
 
-  def hasAcquired = {
-
-
-
-  }
+  def isTriggered = this.readString(":TER?").toInt match {case 1 => true ; case 0 => false}
 
   def getWaveform(channel:Int) = {
     require (channel >=1 && channel <=4)
 
     //-- Set Format
+    this.write(s":ACQuire:TYPE NORMAL")
     this.write(s":WAVeform:SOURce CHANnel${channel}")
-    this.write(s":WAVeform:FORMat WORD")
+    this.write(s":WAVeform:FORMat BYTE")
     this.write(s":WAVeform:POINts:MODE NORMAL")
     this.write(s":WAVeform:UNSigned OFF")
 
@@ -45,6 +46,22 @@ class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
     waveform
 
 
+
+  }
+
+  def getScreenPNG = {
+
+    var data = this.readIEEE4882Bytes(":DISPlay:DATA? PNG, COLOR")
+
+    /*data.getData.foreach {
+      v =>
+        println("IMG data: "+v+ " -> "+v.toInt.toHexString)
+
+    }
+
+    TeaIOUtils.writeToFile(new File("osci.png"),new ByteArrayInputStream(data.getData))*/
+
+    ImageIO.read(new ByteArrayInputStream(data.getData))
 
   }
 

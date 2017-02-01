@@ -24,6 +24,12 @@ class Waveform(val preamble: Preamble) {
         }.toArray)
 
       case Preamble.FORMAT_BYTE =>
+
+        values = Some(bytes.map {
+          byte => byte.toDouble
+        }.toArray)
+
+
       case Preamble.FORMAT_ASCII =>
     }
 
