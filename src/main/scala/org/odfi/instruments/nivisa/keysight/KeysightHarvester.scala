@@ -2,28 +2,29 @@ package org.odfi.instruments.nivisa.keysight
 
 import org.odfi.indesign.core.harvest.Harvester
 import org.odfi.instruments.nivisa.VISADevice
+import org.odfi.instruments.nivisa.usb.VISAUSBDevice
 import org.odfi.instruments.osci.OSCIUI
 
 object KeysightHarvester extends Harvester {
 
  
 
-  this.onDeliverFor[VISADevice] {
-    case r =>
+  this.onDeliverFor[VISAUSBDevice] {
+    case r if (r.getVendorID=="0x0957")=>
       println(s"Keysight H delivered device")
-      r.getDeviceId match {
-        case id if (id.startsWith("AGILENT") && id.contains("DSO-X 2024A")) =>
-          gather(new KeysightOsci(r).deriveFrom(r))
-          true
-        case id if (id.startsWith("AGILENT")) =>
-          println(s"Unknown Keysight Device")
-          //gather(new KeysightDevice(r))
-          false
-        case o =>
 
-          println(s"Tnot a Keysight device: " + o)
+      //-- Device Map
+      r.getProductID match {
+        case "0x1796" =>
+          gather(new KSDSOX2024A(r))
+          true
+        case other =>
           false
       }
+
+    case other =>
+      println("KS got another usb device")
+      false
 
   }
 

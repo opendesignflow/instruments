@@ -2,11 +2,12 @@ package org.odfi.instruments.nivisa.tektronix
 
 import org.odfi.indesign.core.harvest.Harvester
 import org.odfi.instruments.nivisa.VISADevice
+import org.odfi.instruments.nivisa.usb.VISAUSBDevice
 import org.odfi.instruments.osci.OSCIUI
 
 object TektronixHarvester extends Harvester {
 
-  this.onDeliverFor[VISADevice] {
+  this.onDeliverFor[VISAUSBDevice] {
     case r if (r.isUSB) =>
 
       println(s"TEK H delivered SUB device")

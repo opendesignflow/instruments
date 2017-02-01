@@ -1,10 +1,11 @@
 package org.odfi.instruments.nivisa
 
 import org.odfi.indesign.module.measurement.MeasurementDevice
-import org.odfi.instruments.nivisa.VisaLibrary;
-
+import org.odfi.instruments.nivisa.VisaLibrary
 import org.bridj.Pointer
 import java.io.ByteArrayOutputStream
+
+import org.odfi.instruments.ieee.IEEE4882BinaryBlock
 
 class VISADevice(val deviceString: String) extends MeasurementDevice {
 
@@ -116,7 +117,7 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
       this.write(command)
 
       // Read bytes as string 
-      new String(this.readBytes)
+      new String(this.readBytes).trim
 
     }
 
@@ -145,6 +146,10 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
       this.write(command)
       this.readBytes
     }
+  }
+
+  def readIEEE4882Bytes(command:String) = {
+    new IEEE4882BinaryBlock(Some(readBytes(command)))
   }
 
   def readBytes: Array[Byte] = {
