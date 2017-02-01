@@ -32,7 +32,7 @@ class IEEE4882BinaryBlock(var array : Option[Array[Byte]]) {
     var lengthString = new String(this.getArray.drop(2).take(lengthDefinitionCharCount))
     println("Lengtj string: "+lengthString)
     //var length = this.getArray.drop(2).take(lengthDefinitionCharCount).mkString.toInt
-    lengthString.toInt
+    lengthString.toInt +1
   }
   
   def getData = {
