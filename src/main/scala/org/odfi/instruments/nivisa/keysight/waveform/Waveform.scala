@@ -3,6 +3,9 @@ package org.odfi.instruments.nivisa.keysight.waveform
 import java.io.{DataOutputStream, File, FileOutputStream}
 
 import scala.collection.mutable.ArrayBuffer
+import java.io.DataInputStream
+import com.idyria.osi.tea.io.TeaIOUtils
+import java.io.FileInputStream
 
 /**
   * Created by Tristran on 01.02.2017.
@@ -25,7 +28,19 @@ class Waveform(val preamble: Preamble) {
     }
 
   }
+  
+  def getValues = values match {
+    case Some(data) => data
+    case None => throw new RuntimeException("Waveform has not been initialised with data")
+  }
+  def setValues(arr:Array[Double]) = {
+    this.values = Some(arr)
+  }
 
+  def getPointsCount = {
+    this.getValues.size
+  }
+  
   def toBinaryFile(f: File) = {
 
     if (f.exists()) {
@@ -45,6 +60,49 @@ class Waveform(val preamble: Preamble) {
 
     os.flush
     os.close
+   
   }
 
+}
+
+
+object Waveform {
+  
+  def fromBinaryFile(f:File) = {
+    
+    
+    
+    //-- Open
+    var is = new DataInputStream(new FileInputStream(f))
+
+    //-- Take first line
+     //-- First Line is preamble
+    var preamble = new String
+    var c = is.readChar()
+    while (c!='\n') {
+      
+      preamble += c
+      
+      c = is.readChar()
+    }
+    
+    //var preamble = is.readLine().trim()
+ 
+    println("Read PR: "+preamble)
+    
+    //-- Prepare
+    var waveform = new Waveform(new Preamble(preamble))
+    
+    //-- Get Data
+    println("Size: "+waveform.preamble.points.toInt)
+    var data = (0 until waveform.preamble.points.toInt).map (i => is.readDouble()).toArray
+    waveform.setValues(data)
+    
+    
+    is.close()
+    waveform
+    
+    
+  }
+  
 }
