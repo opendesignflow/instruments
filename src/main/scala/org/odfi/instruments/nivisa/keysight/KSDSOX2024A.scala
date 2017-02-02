@@ -14,6 +14,29 @@ class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
 
   def isTriggered = this.readString(":TER?").toInt match {case 1 => true ; case 0 => false}
 
+  def onTriggered(cl: KSDSOX2024A => Boolean ): Unit = {
+
+    var continue = true
+    while(continue) {
+
+      isTriggered match {
+        case true =>
+
+
+
+              // Call handling closure
+            continue = cl(this)
+
+            // Start in single mode again
+          this.write(":SINGLE")
+
+
+        case false =>
+      }
+
+    }
+  }
+
   def getWaveform(channel:Int) = {
     require (channel >=1 && channel <=4)
 
