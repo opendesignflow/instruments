@@ -13,8 +13,8 @@
 
 	<build>
 
-	
-	
+
+
 		<plugins>
 			<!-- Generate native interfaces -->
 			<plugin>
@@ -120,16 +120,23 @@
 		</repository>
 		<repository>
 			<snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 			<id>odfi.snapshots</id>
 			<name>odfi-snapshot</name>
 			<url>https://www.opendesignflow.org/maven/repository/snapshots/</url>
 		</repository>
 	</repositories>
-	
-	
+
+
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.13</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.nativelibs4java</groupId>
 			<artifactId>bridj</artifactId>
