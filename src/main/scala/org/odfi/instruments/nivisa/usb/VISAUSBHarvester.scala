@@ -12,7 +12,7 @@ object VISAUSBHarvester extends Harvester{
 
   this.onDeliverFor[VISADevice] {
     case device if (device.isUSB) =>
-      println("Found USB device: "+device.getVendorID)
+     // println("Found USB device: "+device.getVendorID)
       gather(new VISAUSBDevice(device))
       true
   }

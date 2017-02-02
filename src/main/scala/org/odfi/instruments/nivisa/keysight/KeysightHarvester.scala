@@ -11,7 +11,7 @@ object KeysightHarvester extends Harvester {
 
   this.onDeliverFor[VISAUSBDevice] {
     case r if (r.getVendorID=="0x0957")=>
-      println(s"Keysight H delivered device")
+      //println(s"Keysight H delivered device")
 
       //-- Device Map
       r.getProductID match {

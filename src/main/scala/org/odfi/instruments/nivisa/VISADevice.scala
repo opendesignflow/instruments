@@ -164,7 +164,7 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
       while (continue) {
         VisaLibrary.viRead(deviceSession.get, readBuffer, 4096, readCount) match {
           case 0 =>
-            println(s"Read: ${readCount.getInt}")
+            //println(s"Read: ${readCount.getInt}")
             resBytes.write(readBuffer.getBytes(readCount.getInt))
             continue = false
           //Some(new String(readBuffer.getBytes(readCount.getInt).dropRight(1)))

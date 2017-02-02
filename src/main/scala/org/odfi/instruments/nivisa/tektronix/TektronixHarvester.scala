@@ -10,7 +10,7 @@ object TektronixHarvester extends Harvester {
   this.onDeliverFor[VISAUSBDevice] {
     case r if (r.isUSB) =>
 
-      println(s"TEK H delivered SUB device")
+      //println(s"TEK H delivered SUB device")
       
       (r.getVendorID,r.getModelID) match {
         case ("0x0699","C024106") => 
