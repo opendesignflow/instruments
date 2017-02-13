@@ -5,8 +5,7 @@ import org.odfi.instruments.nivisa.VISAHarvester
 
 object TryTekOsci extends App {
   
-  //-- Use tektronix harvester
-  VISAHarvester --> TektronixHarvester
+  //-- Gather devices
   VISAHarvester.harvest
   
   println("Detected VISA devices: "+VISAHarvester.getResources.size)

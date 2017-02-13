@@ -8,12 +8,12 @@ import org.odfi.instruments.osci.OSCIUI
 object TektronixHarvester extends Harvester {
 
   this.onDeliverFor[VISAUSBDevice] {
-    case r if (r.isUSB) =>
+    case r if (r.getVendorID=="0x0699") =>
 
       //println(s"TEK H delivered SUB device")
       
-      (r.getVendorID,r.getModelID) match {
-        case ("0x0699","C024106") => 
+      r.getModelID match {
+        case "C024106" => 
           gather(new TekTronixOsci(r))
           true
         case other => 
