@@ -13,9 +13,32 @@
 
 	<build>
 
+		<resources>
+			<resource>
+				<directory>
+                src/examples/resources
+            </directory>
+			</resource>
+		</resources>
+
 
 
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ooxoo-plugin</artifactId>
+				<version>3.2.3-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- Generate native interfaces -->
 			<plugin>
 				<groupId>com.nativelibs4java</groupId>
@@ -45,6 +68,7 @@
 						<configuration>
 							<sources>
 								<source>${project.build.directory}/generated-sources/java</source>
+								<source>${project.build.directory}/generated-sources/scala</source>
 								<source>src/examples/scala</source>
 							</sources>
 						</configuration>
@@ -57,6 +81,7 @@
 						<configuration>
 							<sources>
 								<source>${project.build.directory}/generated-sources/java</source>
+								<source>${project.build.directory}/generated-sources/scala</source>
 								<source>src/examples/scala</source>
 							</sources>
 						</configuration>
