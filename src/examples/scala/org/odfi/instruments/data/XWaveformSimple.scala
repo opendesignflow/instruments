@@ -20,7 +20,7 @@ object XWaveformSimple extends App {
   waveform.toFile(new File(out, "waveform-50000-simple.xml.bz2"))
   //(0 until
 
-  
+   
   // Wavefor with external file
   //---------------
   var waveformExt = new XWaveform
