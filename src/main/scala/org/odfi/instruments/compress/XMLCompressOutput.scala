@@ -23,6 +23,7 @@ trait XMLCompressOutput extends STAXSyncTrait {
     
     this.staxPreviousFile = Some(f)
     
+    this
     
   }
   
