@@ -27,6 +27,12 @@ object InstrumentsDataModel extends ModelBuilder {
   
     // POints  count
     "Points" ofType "Integer"
+    "XReference"  ofType "double"
+    "XIncrement" ofType "double"
+    "XUnit" ofType "string"
+    "YReference" ofType "double"
+    "YIncrement" ofType "double"
+    "YUnit" ofType "string"
     
     // If embedded data
     "Data" ofType("intbinary")

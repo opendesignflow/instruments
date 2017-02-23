@@ -5,3 +5,4 @@ doc/build/
 .classpath
 _jnaerator.*
 .settings/
+.idea/

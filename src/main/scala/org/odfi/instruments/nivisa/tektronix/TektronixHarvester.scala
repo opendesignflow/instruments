@@ -10,13 +10,14 @@ object TektronixHarvester extends Harvester {
   this.onDeliverFor[VISAUSBDevice] {
     case r if (r.getVendorID=="0x0699") =>
 
-      //println(s"TEK H delivered SUB device")
+
+     // println(s"TEK H delivered SUB device: "+r.getVendorID)
       
       r.getModelID match {
-        case "C024106" => 
-          gather(new TekTronixOsci(r))
+        case "C100876" =>
+          gather(new TDS2002B(r))
           true
-        case other => 
+        case other =>
           false
       }
       
@@ -30,5 +31,4 @@ object TektronixHarvester extends Harvester {
           false
       }*/
   }
-
 }

@@ -1,5 +1,6 @@
 package org.odfi.instruments.nivisa.keysight
 
+import org.odfi.instruments.data.XWaveform
 import org.odfi.instruments.nivisa.VISADevice
 import org.odfi.instruments.nivisa.tektronix.TekTronixDevice
 import org.odfi.instruments.osci.OSCIDevice
@@ -25,6 +26,10 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
 
     //bytesPNG
     //Array[Byte]()
+  }
+
+  def getWaveform : XWaveform = {
+    XWaveform()
   }
 
 }

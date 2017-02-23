@@ -21,12 +21,14 @@ object XWaveformSimple extends App {
   waveform.toFile(new File(out, "waveform-50000-simple.xml"))
   //waveform.toFile(new File(out, "waveform-50000-simple.xml.bz2"))
   //(0 until
+
   
   //-- REad back
   var waveformRead = new XWaveform 
   waveformRead.fromFile(new File(out, "waveform-50000-simple.xml"))
 
   /*
+>>>>>>> f21e7d93476326860247b3fb7df17c5c71f9ef3d
   // Wavefor with external file
   //---------------
   var waveformExt = new XWaveform
