@@ -4,6 +4,7 @@ import java.io.{ByteArrayInputStream, File}
 import javax.imageio.ImageIO
 
 import com.idyria.osi.tea.io.TeaIOUtils
+import org.odfi.instruments.data.XWaveform
 import org.odfi.instruments.nivisa.VISADevice
 import org.odfi.instruments.nivisa.keysight.waveform.{Preamble, Waveform}
 
@@ -61,12 +62,20 @@ class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
 
 
     //-- Read WF
-    var waveform = new Waveform(preamble)
+    //var waveform = new Waveform(preamble)
     var data = this.readIEEE4882Bytes(":WAVeform:DATA?")
-    waveform.fromBytes(data.getData)
 
+    //waveform.fromBytes(data.getData)
 
-    waveform
+    var xwaveform = new  XWaveform()
+    xwaveform.data =  data.getData.map { b => b.toInt }
+    xwaveform.points = preamble.points
+    xwaveform.xIncrement= preamble.dblXIncrement
+    xwaveform.xUnit= preamble.dblXOrigin
+    xwaveform.yIncrement=preamble.sngYIncrement
+    xwaveform.yUnit= preamble.sngYOrigin
+
+    xwaveform
 
 
 

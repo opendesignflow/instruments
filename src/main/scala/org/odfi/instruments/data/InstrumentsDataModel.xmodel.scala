@@ -26,7 +26,7 @@ object InstrumentsDataModel extends ModelBuilder {
     attribute("externalFile") ofType("string")
   
     // POints  count
-    "Points" ofType "Integer"
+    "Points" ofType "long"
     "XReference"  ofType "double"
     "XIncrement" ofType "double"
     "XUnit" ofType "string"

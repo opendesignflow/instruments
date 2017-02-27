@@ -9,10 +9,10 @@ object XWaveformSimple extends App {
   //------------------
 
   var waveform = new XWaveform
-  waveform.points = 50000
+  waveform.points = 50000L
  
  // waveform.data.set((0 until waveform.points).map { i => Random.nextInt() }.toArray)
-  waveform.data = (0 until waveform.points).map { i => Random.nextInt() }.toArray
+  waveform.data = (0L until waveform.points).map { i => Random.nextInt() }.toArray
 
   //-- Save to File
   var out = new File("target/test-out")

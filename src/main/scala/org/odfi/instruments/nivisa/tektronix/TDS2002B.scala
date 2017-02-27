@@ -54,7 +54,7 @@ class TDS2002B(baseDevice: VISAUSBDevice) extends TekTronixOsci(baseDevice) {
      //-- Save to waveform
 
      waveform.data = dataInt
-     waveform.points = points.toInt
+     waveform.points = points.toLong
      waveform.xIncrement= timeScale
      waveform.xUnit= xunit
      waveform.yIncrement=ymult
