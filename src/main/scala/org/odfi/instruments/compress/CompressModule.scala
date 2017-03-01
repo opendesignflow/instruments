@@ -14,6 +14,17 @@ import java.util.zip.ZipEntry
 
 object CompressModule extends IndesignModule {
 
+  def isArchive(f:File) = {
+    
+    f.getName match {
+      case arch if(arch.endsWith(".zip")) => true
+      case arch if(arch.endsWith(".tar")) => true
+      case arch if(arch.endsWith(".tar.gz")) => true
+      case arch if(arch.endsWith(".tar.bz2")) => true
+      case other => false
+    }
+  }
+  
   def getFileCompressOutputStream(f: File) = {
     f.getName match {
       case name if (name.endsWith("bz2")) =>
