@@ -29,9 +29,11 @@ object InstrumentsDataModel extends ModelBuilder {
     "Points" ofType "long"
     "XReference"  ofType "double"
     "XIncrement" ofType "double"
+    "XOrigin" ofType "double"
     "XUnit" ofType "string"
     "YReference" ofType "double"
     "YIncrement" ofType "double"
+    "YOrigin" ofType "double"
     "YUnit" ofType "string"
     
     // If embedded data

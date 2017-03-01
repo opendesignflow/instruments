@@ -71,9 +71,11 @@ class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
     xwaveform.data =  data.getData.map { b => b.toInt }
     xwaveform.points = preamble.points
     xwaveform.xIncrement= preamble.dblXIncrement
-    xwaveform.xUnit= preamble.dblXOrigin
+    xwaveform.xReference = preamble.lngXReference
+    xwaveform.xOrigin= preamble.dblXOrigin
     xwaveform.yIncrement=preamble.sngYIncrement
-    xwaveform.yUnit= preamble.sngYOrigin
+    xwaveform.yOrigin= preamble.sngYOrigin
+    xwaveform.yReference= preamble.lngYReference
 
     xwaveform
 
