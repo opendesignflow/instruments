@@ -15,6 +15,13 @@ class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
 
   def isTriggered = this.readString(":TER?").toInt match {case 1 => true ; case 0 => false}
 
+  def forceTrigger = {
+
+    this.write(":TRIGger:FORCe")
+
+
+  }
+
   def onTriggered(cl: KSDSOX2024A => Boolean ): Unit = {
 
     var continue = true
@@ -33,13 +40,72 @@ class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
 
 
         case false =>
+          Thread.sleep(10)
       }
 
     }
   }
 
-  def getWaveform(channel:Int) = {
+  def onForceTriggered(cl: KSDSOX2024A => Boolean ): Unit = {
+
+
+    // Clear status
+    this.write("*CLS")
+
+    var continue = true
+    while(continue) {
+
+      // Start in single mode again
+      this.write(":SINGLE")
+
+      // Force Trigger
+      forceTrigger
+      //isTriggered
+
+      // Call handling closure
+      continue = cl(this)
+
+      if (!continue) {
+        // Start in single mode again
+        this.write(":SINGLE")
+      }
+
+
+
+    }
+
+
+  }
+
+
+
+  //var preamble : Option[Preamble] =  None
+
+  def prepareAcquire(channel:Int) = {
+
+    //-- Set Format
+   /* this.write(s":ACQuire:TYPE NORMAL")
+    this.write(s":WAVeform:SOURce CHANnel${channel}")
+    this.write(s":WAVeform:FORMat BYTE")
+    this.write(s":WAVeform:POINts:MODE NORMAL")
+    this.write(s":WAVeform:UNSigned OFF")*/
+
+
+
+  }
+
+  def getWaveform(channel:Int,prepareAcquire : Boolean = true) = {
     require (channel >=1 && channel <=4)
+
+    if (prepareAcquire==true) {
+      //println(s"Setting acquire")
+      this.prepareAcquire(channel)
+      //println(s"Set Acquire")
+    }
+
+
+    //println(s"Getting waveform")
+    //Thread.sleep(100)
 
     //-- Set Format
     this.write(s":ACQuire:TYPE NORMAL")
@@ -50,15 +116,15 @@ class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
 
     //-- Get Number of points
     var pointsCount = this.readString(":WAVeform:COUNt?")
-    println("POints count: "+pointsCount)
+    //println("POints count: "+pointsCount)
 
     //-- Get preamble
     var pr = this.readString(":WAVeform:PREamble?")
-    println("Preamble: "+pr)
+    //println("Preamble: "+pr)
     var preamble =  new Preamble(pr)
 
-    println("PR format: "+preamble.format)
-    println("PR points: "+preamble.points)
+   // println("PR format: "+preamble.format)
+   // println("PR points: "+preamble.points)
 
 
     //-- Read WF
@@ -76,6 +142,8 @@ class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
     xwaveform.yIncrement=preamble.sngYIncrement
     xwaveform.yOrigin= preamble.sngYOrigin
     xwaveform.yReference= preamble.lngYReference
+
+    //println(s"Done waveform")
 
     xwaveform
 
