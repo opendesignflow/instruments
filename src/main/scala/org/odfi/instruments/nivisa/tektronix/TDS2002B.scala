@@ -19,7 +19,7 @@ class TDS2002B(baseDevice: VISAUSBDevice) extends TekTronixOsci(baseDevice) {
 
      println(s"Getting Curve...")
 
-     var waveform =  XWaveform()
+     var waveform =  new XWaveform()
 
      //- Set Output parameters
 

@@ -29,7 +29,7 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
   }
 
   def getWaveform : XWaveform = {
-    XWaveform()
+    new XWaveform()
   }
 
 }

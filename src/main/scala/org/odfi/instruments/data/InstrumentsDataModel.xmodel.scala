@@ -14,8 +14,23 @@ import com.idyria.osi.ooxoo.core.buffers.structural.io.sax.STAXSyncTrait
   new producer(value = classOf[MDProducer])))
 object InstrumentsDataModel extends ModelBuilder {
   
-  "XWaveform" is {
+  val wp ="WaveformParameters" is {
     
+    // POints  count
+    "Points" ofType "long"
+    "XReference"  ofType "double"
+    "XIncrement" ofType "double"
+    "XOrigin" ofType "double"
+    "XUnit" ofType "string"
+    "YReference" ofType "double"
+    "YIncrement" ofType "double"
+    "YOrigin" ofType "double"
+    "YUnit" ofType "string"
+    
+  }
+  
+  "XWaveform" is {
+    elementsStack.head.makeTraitAndUseCustomImplementation
     withTrait("org.odfi.instruments.compress.XMLCompressOutput")
     
     attribute("name")
@@ -25,7 +40,12 @@ object InstrumentsDataModel extends ModelBuilder {
     // External
     attribute("externalFile") ofType("string")
   
-    // POints  count
+    // Parameters
+    //---------
+    importElement(wp)
+    
+    
+    //-- Old
     "Points" ofType "long"
     "XReference"  ofType "double"
     "XIncrement" ofType "double"
