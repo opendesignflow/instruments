@@ -7,10 +7,8 @@ import org.odfi.instruments.osci.OSCIUI
 
 object KeysightHarvester extends Harvester {
 
- 
-
   this.onDeliverFor[VISAUSBDevice] {
-    case r if (r.getVendorID=="0x0957")=>
+    case r if (r.getVendorID == "0x0957") =>
       //println(s"Keysight H delivered device")
 
       //-- Device Map
@@ -22,11 +20,21 @@ object KeysightHarvester extends Harvester {
           false
       }
 
+    case r if (r.getVendorID == "0x2A8D") =>
+      
+      //-- Device Map
+      r.getProductID match {
+        case "0x1772" =>
+          gather(new KMSOX3054T(r))
+          true
+        case other =>
+          false
+      }
+
     case other =>
       println("KS got another usb device")
       false
 
   }
-
 
 }

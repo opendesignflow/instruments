@@ -13,14 +13,7 @@ import org.odfi.instruments.nivisa.keysight.waveform.{Preamble, Waveform}
   */
 class KSDSOX2024A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
 
-  def isTriggered = this.readString(":TER?").toInt match {case 1 => true ; case 0 => false}
-
-  def forceTrigger = {
-
-    this.write(":TRIGger:FORCe")
-
-
-  }
+  
 
   def onTriggered(cl: KSDSOX2024A => Boolean ): Unit = {
 

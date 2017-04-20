@@ -8,6 +8,16 @@ import org.odfi.instruments.nivisa.VISAOsciDevice
 
 class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) with KeysightDevice {
 
+  def isTriggered = this.readString(":TER?").toInt match {case 1 => true ; case 0 => false}
+
+  def forceTrigger = {
+
+    this.write(":TRIGger:FORCe")
+
+
+  }
+  
+  
   /**
    * Returns a PNG format screenshot
    */
