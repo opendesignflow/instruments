@@ -36,6 +36,9 @@ class IEEE4882BinaryBlock(var array : Option[Array[Byte]]) {
     lengthString.toInt +1
   }
   
+  /**
+   * Get the actual Data
+   */
   def getData = {
     this.getArray.takeRight(this.getDataLength)
   }
