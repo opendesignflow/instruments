@@ -16,12 +16,15 @@ object KeysightHarvester extends Harvester {
         case "0x1796" =>
           gather(new KSDSOX2024A(r))
           true
+        case "0x179B" =>
+          gather(new KSDSOX2002A(r))
+          true
         case other =>
           false
       }
 
     case r if (r.getVendorID == "0x2A8D") =>
-      
+
       //-- Device Map
       r.getProductID match {
         case "0x1772" =>

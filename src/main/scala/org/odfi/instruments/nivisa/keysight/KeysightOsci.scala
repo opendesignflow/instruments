@@ -21,21 +21,13 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
   /**
    * Returns a PNG format screenshot
    */
-  def saveScreen(name:String) : Unit = {
+  def saveScreenBytesPNG  = {
 
-   
-    val fn = """bla.png"""
-    //-- Save image
-    this.write("SAVe:IMAGe:Format PNG")
-    this.write(s"""SAVe:IMAGe "${name}"""")
 
-   // Thread.sleep(3000)
     
-    //-- Get Image
-   // var bytesPNG = this.readBytes(s""":RECall:FILename "${name}"""")
-
-    //bytesPNG
-    //Array[Byte]()
+    this.readIEEE4882Bytes(":DISPlay:DATA? PNG, COLOR")
+    
+    
   }
 
   def getWaveform : XWaveform = {
