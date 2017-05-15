@@ -6,6 +6,10 @@ import org.bridj.Pointer
 import java.io.ByteArrayOutputStream
 
 import org.odfi.instruments.ieee.IEEE4882BinaryBlock
+import scala.io.Source
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 class VISADevice(val deviceString: String) extends MeasurementDevice {
 
@@ -216,9 +220,37 @@ class VISADevice(val deviceString: String) extends MeasurementDevice {
     }
   }
 
+  /**
+   * String is split to lines, lines are trimmed so code can be ugly
+   */
+  def writeLines(lines:String) = {
+    Source.fromChars(lines.toCharArray()).getLines().filterNot(_.trim=="").foreach {
+      l => 
+        write(l.trim)
+    }
+  }
+  
   // Utils
   //--------------
 
+  def doubleToSCPIString(d:Double) = {
+    
+    var symbols = DecimalFormatSymbols.getInstance(Locale.US);
+    symbols.setExponentSeparator(if (d>1 || d < -1) "E+" else "E-")
+    
+    val f = new DecimalFormat("0.00E0")
+    f.setDecimalFormatSymbols(symbols)
+    /*f.setMaximumIntegerDigits(2)
+    f.setMaximumFractionDigits(2)
+    f.setMinimumFractionDigits(1)
+    f.setMinimumIntegerDigits(1)*/
+    f.setDecimalSeparatorAlwaysShown(true)
+    f.setNegativePrefix("-")
+    f.setPositivePrefix("+")
+    f.setParseBigDecimal(true)
+    f.format(d)
+  }
+  
   def getDeviceId = {
     this.readString("*IDN?")
 

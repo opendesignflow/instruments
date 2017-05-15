@@ -7,6 +7,11 @@ import org.odfi.instruments.osci.OSCIDevice
 
 abstract class TekTronixOsci(baseDevice: VISADevice) extends TekTronixDevice(baseDevice) with OSCIDevice {
 
+  
+  def selectChannel(channel:Int) = {
+    this.write(s":DATa:SOUrce CH${channel}")
+  }
+  
   def getPNGScreen = {
 
     //-- Save image

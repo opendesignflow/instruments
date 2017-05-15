@@ -17,6 +17,9 @@ object TektronixHarvester extends Harvester {
         case "C100876" =>
           gather(new TDS2002B(r))
           true
+        case "C024106" =>
+          gather(new MDO3024106(r))
+          true
         case other =>
           false
       }
