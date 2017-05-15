@@ -25,7 +25,7 @@ VOLTage:HIGH ${doubleToSCPIString(voltageHigh)}
 VOLTage:LOW ${doubleToSCPIString(voltageLow)}
 PHASe ${doubleToSCPIString(phase)}
 """
-    println(toSend)
+    //println(toSend)
 
     d.writeLines(toSend)
    /* d.writeLines(s"""
