@@ -7,21 +7,54 @@ import org.odfi.instruments.osci.OSCIDevice
 
 abstract class TekTronixOsci(baseDevice: VISADevice) extends TekTronixDevice(baseDevice) with OSCIDevice {
 
-  
+  // Trigger
+  // TRIGger:STATE?
+  /*
+   * ARMED indicates that the oscilloscope is acquiring pretrigger information.
+AUTO indicates that the oscilloscope is in the automatic mode and acquires data
+even in the absence of a trigger.
+READY indicates that all pretrigger information has been acquired and that the
+oscilloscope is ready to accept a trigger.
+SAVE indicates that the oscilloscope is in save mode and is not acquiring data.
+TRIGGER indicates that the oscilloscope triggered and is acquiring the post trigger
+information.
+   */
+
+  def isTriggered: Boolean = {
+    this.readString("TRIGger:STATE?") match {
+      case t if (t.startsWith("TRIG")) => true
+      case other     => 
+        //println("Trigger is: "+other)
+        false
+    }
+  }
+
   // Channels
   //------------------
-  
-  def selectChannel(channel:Int) = {
+
+  def selectChannel(channel: Int) = {
     this.write(s":DATa:SOUrce CH${channel}")
   }
-  
+
   // Acquire
   //---------------
+  
+  def enableSingle : Unit = {
+    this.write("ACQuire:STATE ON")
+    this.write("ACQuire:STOPAfter RUNSTop")
+    this.write("ACQuire:STOPAfter SEQ")
+    
+  }
+  
+  def enableRun : Unit = {
+    this.write("ACQuire:STOPAfter RUNSTop")
+  }
+  
   /**
    * Makes acquisition OFF then rerun it
    */
-  def withStopAndRestartAcquire[T](cl: => T) : T = {
-    
+  def withStopAndRestartAcquire[T](cl: => T): T = {
+
     this.write("ACQuire:STATE OFF")
     try {
       cl
@@ -29,17 +62,15 @@ abstract class TekTronixOsci(baseDevice: VISADevice) extends TekTronixDevice(bas
       this.write("ACQuire:STATE RUN")
     }
   }
-  
+
   def acquireOff = {
     this.write("ACQuire:STATE OFF")
   }
-  
+
   def acquireRun = {
     this.write("ACQuire:STATE RUN")
   }
-  
-  
-  
+
   def getPNGScreen = {
 
     //-- Save image
@@ -49,11 +80,64 @@ abstract class TekTronixOsci(baseDevice: VISADevice) extends TekTronixDevice(bas
     //-- Get Image
     readBytes("FILESystem:READFile \"E:/scr.png\"")
 
-    
-
   }
+  
+  // Wavzeform
+  //------------------
+  
+  /**
+   * Warning, this method does not stop the oscilloscope for acquire
+   * If you want to force stop, you should use acquireOff/Run or withAcquireStopAnRestart
+   * yourself
+   * 
+   * WARNING: the Y offset is removed from the data here and Y origin set to 0
+   * This is because the Y Origin in XWaveform is supposed to be a real value not a digitizing level value
+   * And the osci gives 0 back for this value all the time, but offset, which is in digitizing value is correct.
+   */
+  def getWaveform : XWaveform = {
 
 
+     var waveform =  new XWaveform()
+     
+     this.write(":DATa:STARt 1")
+     this.write(":DATa:STOP 50000")
+     
+     this.write("DATa:ENCdg RIBINARY")
+     this.write("WFMpre:BYT_Nr 1") // 1 byte per point
+     this.write(":HEADer 0")
 
+
+     var points = this.readDouble("WFMOutpre:NR_Pt?")
+     var timeScale = this.readDouble("WFMOutpre:XINcr?")
+     var yoffset = this.readDouble("WFMOutpre:YOFF?")
+     var ymult = this.readDouble("WFMOutpre:YMUlt?")
+     var xunit = this.readString("WFMOutpre:XUNit?")
+     var yunit = this.readString("WFMOutpre:YUNit?")
+     var yorigin = this.readDouble("WFMOutpre:YZero?")
+     
+       //println("Origin is: "+yorigin, "offset: "+yoffset)
+     //-- Get curve
+     var curve = this.readBytes("CURVE?")
+
+     //-- First char must be #
+     var dataBlock = new IEEE4882BinaryBlock(Some(curve))
+
+     //-- Convert to int (one byte in one int)
+     var dataInt = dataBlock.getData.map { b => (b - yoffset).toInt }
+
+     //-- Save to waveform
+
+     waveform.data = dataInt
+     waveform.points = points.toLong
+     waveform.xIncrement= timeScale
+     waveform.xUnit= xunit
+     waveform.yIncrement=ymult
+     waveform.yUnit= yunit
+     waveform.yOrigin = yorigin
+     
+     //-- Return
+     waveform
+
+   }
 
 }

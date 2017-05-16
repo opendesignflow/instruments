@@ -4,9 +4,12 @@ import org.odfi.indesign.core.harvest.Harvester
 import org.odfi.instruments.nivisa.VISADevice
 import org.odfi.instruments.nivisa.usb.VISAUSBDevice
 import org.odfi.instruments.osci.OSCIUI
+import org.odfi.instruments.osci.OSCIDeviceHarvester
 
 object TektronixHarvester extends Harvester {
 
+  this --> OSCIDeviceHarvester
+  
   this.onDeliverFor[VISAUSBDevice] {
     case r if (r.getVendorID=="0x0699") =>
 
@@ -19,6 +22,9 @@ object TektronixHarvester extends Harvester {
           true
         case "C024106" =>
           gather(new MDO3024106(r))
+          true
+        case "C011774" => 
+           gather(new C011774(r))
           true
         case other =>
           false

@@ -5,6 +5,7 @@ import org.odfi.instruments.nivisa.VISADevice
 import org.odfi.instruments.nivisa.tektronix.TekTronixDevice
 import org.odfi.instruments.osci.OSCIDevice
 import org.odfi.instruments.nivisa.VISAOsciDevice
+import org.odfi.instruments.nivisa.keysight.waveform.Preamble
 
 class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) with KeysightDevice {
 
@@ -15,6 +16,10 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
     this.write(":TRIGger:FORCe")
 
 
+  }
+  
+  def enableSingle = {
+     this.write(":SINGLE")
   }
   
   
@@ -29,9 +34,55 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
     
     
   }
+  
+  /**
+   * Does not prepare acquisition
+   */
+  def getWaveform = {
+    
+    
 
-  def getWaveform : XWaveform = {
-    new XWaveform()
+
+    //println(s"Getting waveform")
+    //Thread.sleep(100)
+
+
+    //-- Get Number of points
+    var pointsCount = this.readString(":WAVeform:COUNt?")
+    //println("POints count: "+pointsCount)
+
+    //-- Get preamble
+    var pr = this.readString(":WAVeform:PREamble?")
+    //println("Preamble: "+pr)
+    var preamble =  new Preamble(pr)
+
+   // println("PR format: "+preamble.format)
+   // println("PR points: "+preamble.points)
+
+
+    //-- Read WF
+    //var waveform = new Waveform(preamble)
+    var data = this.readIEEE4882Bytes(":WAVeform:DATA?")
+
+    //waveform.fromBytes(data.getData)
+
+    var xwaveform = new  XWaveform()
+    xwaveform.data =  data.getData.map { b => b.toInt }
+    xwaveform.points = preamble.points
+    xwaveform.xIncrement= preamble.dblXIncrement
+    xwaveform.xReference = preamble.lngXReference
+    xwaveform.xOrigin= preamble.dblXOrigin
+    xwaveform.yIncrement=preamble.sngYIncrement
+    xwaveform.yOrigin= preamble.sngYOrigin
+    xwaveform.yReference= preamble.lngYReference
+
+    //println(s"Done waveform")
+
+    xwaveform
+
+
+
   }
+
 
 }

@@ -15,7 +15,7 @@ import org.odfi.instruments.nivisa.usb.VISAUSBDevice
   */
 class TDS2002B(baseDevice: VISAUSBDevice) extends TekTronixOsci(baseDevice) {
 
-   def getWaveform : XWaveform = {
+   /*def getWaveform : XWaveform = {
 
      println(s"Getting Curve...")
 
@@ -62,7 +62,7 @@ class TDS2002B(baseDevice: VISAUSBDevice) extends TekTronixOsci(baseDevice) {
      //-- Save to File
      waveform
 
-   }
+   }*/
   def getJPEGHardcopy = {
     this.write("HARDCopy:FORMat JPEG")
     this.write("HARDCopy:LAYout LANdscape")

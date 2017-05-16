@@ -15,29 +15,7 @@ class KSDSOX2002A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
 
   
 
-  def onTriggered(cl: KSDSOX2002A => Boolean ): Unit = {
-
-    var continue = true
-    while(continue) {
-
-      isTriggered match {
-        case true =>
-
-
-
-              // Call handling closure
-            continue = cl(this)
-
-            // Start in single mode again
-          this.write(":SINGLE")
-
-
-        case false =>
-          Thread.sleep(10)
-      }
-
-    }
-  }
+  
 
   def onForceTriggered(cl: KSDSOX2002A => Boolean ): Unit = {
 
