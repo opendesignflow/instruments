@@ -18,6 +18,10 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
 
   }
   
+  def selectChannel(c:Int) = {
+    this.write(s":WAVeform:SOURce CHANnel${c}")
+  }
+  
   def enableSingle = {
      this.write(":SINGLE")
   }
