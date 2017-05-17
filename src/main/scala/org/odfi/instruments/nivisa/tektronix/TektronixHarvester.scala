@@ -3,7 +3,6 @@ package org.odfi.instruments.nivisa.tektronix
 import org.odfi.indesign.core.harvest.Harvester
 import org.odfi.instruments.nivisa.VISADevice
 import org.odfi.instruments.nivisa.usb.VISAUSBDevice
-import org.odfi.instruments.osci.OSCIUI
 import org.odfi.instruments.osci.OSCIDeviceHarvester
 
 object TektronixHarvester extends Harvester {

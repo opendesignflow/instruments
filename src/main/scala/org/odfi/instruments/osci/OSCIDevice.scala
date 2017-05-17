@@ -20,6 +20,8 @@ trait OSCIDevice extends MeasurementDevice {
 
   // Acquisitation control
   //------------
+  def selectChannel(channel: Int) 
+  
   def enableSingle: Unit
 
   // Trigger
