@@ -27,13 +27,13 @@ class IEEE4882BinaryBlock(var array : Option[Array[Byte]]) {
     // Second byte is a char that needs to be converted to Int
     var lengthDefinitionCharCount = this.getArray(1).toChar.toString.toInt
 
-   // println("Lengtj definition char count: "+lengthDefinitionCharCount)
+    //println("Lengtj definition char count: "+lengthDefinitionCharCount)
 
     // Legnth definition number of chars tells us how many chars to make a String from to get the number of points
     var lengthString = new String(this.getArray.drop(2).take(lengthDefinitionCharCount))
-   // println("Lengtj string: "+lengthString)
+    //println("Lengtj string: "+lengthString)
     //var length = this.getArray.drop(2).take(lengthDefinitionCharCount).mkString.toInt
-    lengthString.toInt +1
+    lengthString.toInt
   }
   
   /**

@@ -26,6 +26,10 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
      this.write(":SINGLE")
   }
   
+   def enableRun: Unit = {
+    this.write(":RUN")
+  }
+  
   
   /**
    * Returns a PNG format screenshot

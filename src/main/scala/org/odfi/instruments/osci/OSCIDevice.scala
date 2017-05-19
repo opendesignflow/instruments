@@ -23,6 +23,7 @@ trait OSCIDevice extends MeasurementDevice {
   def selectChannel(channel: Int) 
   
   def enableSingle: Unit
+  def enableRun : Unit
 
   // Trigger
   //-------------------
@@ -54,6 +55,7 @@ trait OSCIDevice extends MeasurementDevice {
       }
 
     }
+    this.enableRun
   }
 
   def getWaveform: XWaveform

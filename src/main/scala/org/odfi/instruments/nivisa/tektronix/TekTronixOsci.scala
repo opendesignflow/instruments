@@ -42,18 +42,19 @@ information.
   def enableSingle: Unit = {
 
     try {
-      this.write("ACQuire:STATE ON")
-      this.write("ACQuire:STOPAfter RUNSTop")
+      //this.write("ACQuire:STATE ON")
+     // this.write("ACQuire:STOPAfter RUNSTop")
       this.write("ACQuire:STOPAfter SEQ")
+      this.write("ACQuire:STATE 1")
     } catch {
       case e: Throwable =>
-        Thread.sleep(10)
+       /* Thread.sleep(10)
         this.write("ACQuire:STATE ON")
         Thread.sleep(10)
         this.write("ACQuire:STOPAfter RUNSTop")
         Thread.sleep(10)
         this.write("ACQuire:STOPAfter SEQ")
-        Thread.sleep(10)
+        Thread.sleep(10)*/
     }
   }
 
@@ -66,11 +67,11 @@ information.
    */
   def withStopAndRestartAcquire[T](cl: => T): T = {
 
-    this.write("ACQuire:STATE OFF")
+    acquireOff
     try {
       cl
     } finally {
-      this.write("ACQuire:STATE RUN")
+      acquireRun
     }
   }
 
@@ -81,6 +82,8 @@ information.
   def acquireRun = {
     this.write("ACQuire:STATE RUN")
   }
+  
+  
 
   def getPNGScreen = {
 
@@ -95,7 +98,26 @@ information.
 
   // Wavzeform
   //------------------
+  
+  /**
+   * This also enables run
+   */
+  def setupAcquire(channel:Int, points:Int) = {
+    
+    this.selectChannel(channel)
+   
+    this.write(s":ACQUIRE:NUMSAMples $points")
+    this.write(s"WFMOutpre:NR_Pt $points")
+    this.write("WFMOutpre:ENCdg RIBINARY")
+    this.write("WFMOutpre:BIT_NR 8")
 
+    this.write("WFMOutpre:BYT_Nr 1") // 1 byte per point
+     this.write("DATa:STARt 1")
+    this.write(s"DATa:STOP $points")
+    
+    enableRun
+  
+  }
   /**
    * Warning, this method does not stop the oscilloscope for acquire
    * If you want to force stop, you should use acquireOff/Run or withAcquireStopAnRestart
@@ -109,12 +131,7 @@ information.
 
     var waveform = new XWaveform()
 
-    this.write(":DATa:STARt 1")
-    this.write(":DATa:STOP 50000")
-
-    this.write("DATa:ENCdg RIBINARY")
-    this.write("WFMpre:BYT_Nr 1") // 1 byte per point
-    this.write(":HEADer 0")
+    
 
     var points = this.readDouble("WFMOutpre:NR_Pt?")
     var timeScale = this.readDouble("WFMOutpre:XINcr?")
@@ -124,9 +141,15 @@ information.
     var yunit = this.readString("WFMOutpre:YUNit?")
     var yorigin = this.readDouble("WFMOutpre:YZero?")
 
-    println("Origin is: "+yorigin, "offset: "+yoffset)
+    println("Origin is: "+yorigin, "offset: "+yoffset+", ymult: "+ymult+", points: "+points)
+    println("State Acq: "+this.readDouble("ACQuire:NUMACq?"))
+    println("BYT_NR"+this.readDouble("WFMInpre:BYT_Nr?"))
+    println("Bits: "+ this.readDouble("WFMINPRE:BIT_NR?"))
     //-- Get curve
+    //Thread.sleep(1000)
     var curve = this.readBytes("CURVE?")
+    
+   
 
     //-- First char must be #
     var dataBlock = new IEEE4882BinaryBlock(Some(curve))
@@ -135,6 +158,7 @@ information.
     var dataInt = dataBlock.getData.map { b => b.toInt }
 
     //-- Save to waveform
+     println("Test: "+dataInt.size)
 
     waveform.data = dataInt
     waveform.points = points.toLong
