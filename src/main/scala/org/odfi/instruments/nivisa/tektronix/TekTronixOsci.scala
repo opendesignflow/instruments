@@ -124,7 +124,7 @@ information.
     var yunit = this.readString("WFMOutpre:YUNit?")
     var yorigin = this.readDouble("WFMOutpre:YZero?")
 
-    //println("Origin is: "+yorigin, "offset: "+yoffset)
+    println("Origin is: "+yorigin, "offset: "+yoffset)
     //-- Get curve
     var curve = this.readBytes("CURVE?")
 
@@ -132,7 +132,7 @@ information.
     var dataBlock = new IEEE4882BinaryBlock(Some(curve))
 
     //-- Convert to int (one byte in one int)
-    var dataInt = dataBlock.getData.map { b => (b - yoffset).toInt }
+    var dataInt = dataBlock.getData.map { b => b.toInt }
 
     //-- Save to waveform
 
@@ -142,7 +142,9 @@ information.
     waveform.xUnit = xunit
     waveform.yIncrement = ymult
     waveform.yUnit = yunit
-    waveform.yOrigin = yorigin
+    
+    //-- Y origin calculated from offset in digital levels * Y increments per bit
+    waveform.yOrigin =  (yoffset *  ymult)
 
     //-- Return
     waveform
