@@ -23,7 +23,7 @@ information.
   def isTriggered: Boolean = {
     this.readString("TRIGger:STATE?") match {
       case t if (t.startsWith("TRIG")) => true
-      case other     => 
+      case other =>
         //println("Trigger is: "+other)
         false
     }
@@ -38,18 +38,29 @@ information.
 
   // Acquire
   //---------------
-  
-  def enableSingle : Unit = {
-    this.write("ACQuire:STATE ON")
-    this.write("ACQuire:STOPAfter RUNSTop")
-    this.write("ACQuire:STOPAfter SEQ")
-    
+
+  def enableSingle: Unit = {
+
+    try {
+      this.write("ACQuire:STATE ON")
+      this.write("ACQuire:STOPAfter RUNSTop")
+      this.write("ACQuire:STOPAfter SEQ")
+    } catch {
+      case e: Throwable =>
+        Thread.sleep(10)
+        this.write("ACQuire:STATE ON")
+        Thread.sleep(10)
+        this.write("ACQuire:STOPAfter RUNSTop")
+        Thread.sleep(10)
+        this.write("ACQuire:STOPAfter SEQ")
+        Thread.sleep(10)
+    }
   }
-  
-  def enableRun : Unit = {
+
+  def enableRun: Unit = {
     this.write("ACQuire:STOPAfter RUNSTop")
   }
-  
+
   /**
    * Makes acquisition OFF then rerun it
    */
@@ -81,63 +92,61 @@ information.
     readBytes("FILESystem:READFile \"E:/scr.png\"")
 
   }
-  
+
   // Wavzeform
   //------------------
-  
+
   /**
    * Warning, this method does not stop the oscilloscope for acquire
    * If you want to force stop, you should use acquireOff/Run or withAcquireStopAnRestart
    * yourself
-   * 
+   *
    * WARNING: the Y offset is removed from the data here and Y origin set to 0
    * This is because the Y Origin in XWaveform is supposed to be a real value not a digitizing level value
    * And the osci gives 0 back for this value all the time, but offset, which is in digitizing value is correct.
    */
-  def getWaveform : XWaveform = {
+  def getWaveform: XWaveform = {
 
+    var waveform = new XWaveform()
 
-     var waveform =  new XWaveform()
-     
-     this.write(":DATa:STARt 1")
-     this.write(":DATa:STOP 50000")
-     
-     this.write("DATa:ENCdg RIBINARY")
-     this.write("WFMpre:BYT_Nr 1") // 1 byte per point
-     this.write(":HEADer 0")
+    this.write(":DATa:STARt 1")
+    this.write(":DATa:STOP 50000")
 
+    this.write("DATa:ENCdg RIBINARY")
+    this.write("WFMpre:BYT_Nr 1") // 1 byte per point
+    this.write(":HEADer 0")
 
-     var points = this.readDouble("WFMOutpre:NR_Pt?")
-     var timeScale = this.readDouble("WFMOutpre:XINcr?")
-     var yoffset = this.readDouble("WFMOutpre:YOFF?")
-     var ymult = this.readDouble("WFMOutpre:YMUlt?")
-     var xunit = this.readString("WFMOutpre:XUNit?")
-     var yunit = this.readString("WFMOutpre:YUNit?")
-     var yorigin = this.readDouble("WFMOutpre:YZero?")
-     
-       //println("Origin is: "+yorigin, "offset: "+yoffset)
-     //-- Get curve
-     var curve = this.readBytes("CURVE?")
+    var points = this.readDouble("WFMOutpre:NR_Pt?")
+    var timeScale = this.readDouble("WFMOutpre:XINcr?")
+    var yoffset = this.readDouble("WFMOutpre:YOFF?")
+    var ymult = this.readDouble("WFMOutpre:YMUlt?")
+    var xunit = this.readString("WFMOutpre:XUNit?")
+    var yunit = this.readString("WFMOutpre:YUNit?")
+    var yorigin = this.readDouble("WFMOutpre:YZero?")
 
-     //-- First char must be #
-     var dataBlock = new IEEE4882BinaryBlock(Some(curve))
+    //println("Origin is: "+yorigin, "offset: "+yoffset)
+    //-- Get curve
+    var curve = this.readBytes("CURVE?")
 
-     //-- Convert to int (one byte in one int)
-     var dataInt = dataBlock.getData.map { b => (b - yoffset).toInt }
+    //-- First char must be #
+    var dataBlock = new IEEE4882BinaryBlock(Some(curve))
 
-     //-- Save to waveform
+    //-- Convert to int (one byte in one int)
+    var dataInt = dataBlock.getData.map { b => (b - yoffset).toInt }
 
-     waveform.data = dataInt
-     waveform.points = points.toLong
-     waveform.xIncrement= timeScale
-     waveform.xUnit= xunit
-     waveform.yIncrement=ymult
-     waveform.yUnit= yunit
-     waveform.yOrigin = yorigin
-     
-     //-- Return
-     waveform
+    //-- Save to waveform
 
-   }
+    waveform.data = dataInt
+    waveform.points = points.toLong
+    waveform.xIncrement = timeScale
+    waveform.xUnit = xunit
+    waveform.yIncrement = ymult
+    waveform.yUnit = yunit
+    waveform.yOrigin = yorigin
+
+    //-- Return
+    waveform
+
+  }
 
 }
