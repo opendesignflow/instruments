@@ -18,12 +18,12 @@
 
 
 src/main/jnaerator/fixes.h
-src/main/jnaerator/visa.h
-src/main/jnaerator/visatype.h
-src/main/jnaerator/vpptype.h
+src/main/jnaerator/external/visa.h
+src/main/jnaerator/external/visatype.h
+src/main/jnaerator/external/vpptype.h
 
 -runtime BridJ
 #-parseChunks
 -v
--package kit.ipe.adl.instruments.nivisa
+-package org.odfi.instruments.nivisa
 
