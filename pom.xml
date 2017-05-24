@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.odfi.instruments</groupId>
 	<artifactId>instruments-core</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Instruments Interface</name>
 	<parent>
 		<groupId>org.odfi</groupId>
