@@ -16,14 +16,20 @@ object OSCIDeviceHarvester extends Harvester {
 
 trait OSCIDevice extends MeasurementDevice {
 
-  var osciTriggerPollWaitMs = 1
+  var osciTriggerPollWaitMs = 10
 
   // Acquisitation control
   //------------
-  def selectChannel(channel: Int) 
   
+  /**
+   * Sets up acquisition for waveform to a certain channel with number of points
+   * The implementation should setup the device in a generic way, functional for most usage
+   */
+  def setupAcquire(channel: Int, points: Int)
+  def selectChannel(channel: Int)
+
   def enableSingle: Unit
-  def enableRun : Unit
+  def enableRun: Unit
 
   // Trigger
   //-------------------
@@ -38,8 +44,6 @@ trait OSCIDevice extends MeasurementDevice {
     var continue = true
     while (continue) {
 
-      
-
       isTriggered match {
         case true =>
 
@@ -51,7 +55,7 @@ trait OSCIDevice extends MeasurementDevice {
 
         case false =>
           Thread.sleep(osciTriggerPollWaitMs)
-        
+
       }
 
     }

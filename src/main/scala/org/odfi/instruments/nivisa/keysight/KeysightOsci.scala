@@ -18,6 +18,13 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
 
   }
   
+  /**
+   * Warning, points configuration not set
+   */
+  def setupAcquire(channel:Int, points:Int) = {
+    selectChannel(channel)
+  }
+  
   def selectChannel(c:Int) = {
     this.write(s":WAVeform:SOURce CHANnel${c}")
   }
@@ -42,6 +49,8 @@ class KeysightOsci(baseDevice: VISADevice) extends VISAOsciDevice(baseDevice) wi
     
     
   }
+
+  
   
   /**
    * Does not prepare acquisition
