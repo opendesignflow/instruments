@@ -8,12 +8,36 @@
 	<parent>
 		<groupId>org.odfi</groupId>
 		<artifactId>superpom-scala</artifactId>
-		<version>2.12.2.r1</version>
+		<version>2.12.2.r16</version>
 	</parent>
 
 	<properties>
 		<ooxoo.version>3.2.3</ooxoo.version>
 	</properties>
+
+	<!-- Project INfos -->
+	<!-- ### -->
+	<inceptionYear>2016</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License (AGPL) version 3.0</name>
+			<url>https://www.gnu.org/licenses/agpl-3.0.en.html</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Richard Leys</name>
+			<email>leys.richard@gmail.com</email>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/opendesignflow/instruments.git</connection>
+		<developerConnection>scm:git:git@github.com:opendesignflow/instruments.git</developerConnection>
+		<url>https://github.com/opendesignflow/instruments</url>
+	</scm>
 
 	<build>
 
@@ -92,6 +116,52 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>${site.plugin.version}</version>
+				<configuration>
+					<port>9000</port>
+					<tempWebappDirectory>${basedir}/target/site/tempdir</tempWebappDirectory>
+				</configuration>
+				<dependencies>
+					<dependency><!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>2.12</version>
+					</dependency>
+					<dependency><!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh-external</artifactId>
+						<version>2.12</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-webdav-jackrabbit</artifactId>
+						<version>2.12</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-file</artifactId>
+						<version>2.12</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.doxia</groupId>
+						<artifactId>doxia-module-apt</artifactId>
+						<version>1.7</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.doxia</groupId>
+						<artifactId>doxia-module-markdown</artifactId>
+						<version>1.7</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+
+
+
 		</plugins>
 	</build>
 
