@@ -135,7 +135,8 @@ information.
     var ymult = this.readDouble("WFMOutpre:YMUlt?")
     var xunit = this.readString("WFMOutpre:XUNit?")
     var yunit = this.readString("WFMOutpre:YUNit?")
-    var yorigin = this.readDouble("WFMOutpre:YZero?")
+    var yorigin = this.readDouble("WFMOutpre:YZEro?")
+    var xorigin = this.readDouble("WFMOutpre:XZEro?")
 
     /*println("Origin is: "+yorigin, "offset: "+yoffset+", ymult: "+ymult+", points: "+points)
     println("State Acq: "+this.readDouble("ACQuire:NUMACq?"))
@@ -162,8 +163,12 @@ information.
     waveform.yIncrement = ymult
     waveform.yUnit = yunit
 
+
     //-- Y origin calculated from offset in digital levels * Y increments per bit
     waveform.yOrigin = (yoffset * ymult)
+
+    //-- X origin?
+    waveform.xOrigin = xorigin
 
     //-- Return
     waveform
