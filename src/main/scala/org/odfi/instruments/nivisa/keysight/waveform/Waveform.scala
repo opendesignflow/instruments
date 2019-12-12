@@ -4,7 +4,7 @@ import java.io.{ DataOutputStream, File, FileOutputStream }
 
 import scala.collection.mutable.ArrayBuffer
 import java.io.DataInputStream
-import com.idyria.osi.tea.io.TeaIOUtils
+import org.odfi.tea.io.TeaIOUtils
 import java.io.FileInputStream
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream

@@ -3,7 +3,7 @@ package org.odfi.instruments.nivisa.keysight
 import java.io.{ByteArrayInputStream, File}
 import javax.imageio.ImageIO
 
-import com.idyria.osi.tea.io.TeaIOUtils
+import org.odfi.tea.io.TeaIOUtils
 import org.odfi.instruments.data.XWaveform
 import org.odfi.instruments.nivisa.VISADevice
 import org.odfi.instruments.nivisa.keysight.waveform.{Preamble, Waveform}
@@ -108,11 +108,11 @@ class KSDSOX2002A(baseDevice: VISADevice) extends KeysightOsci(baseDevice) {
     xwaveform.data =  data.getData.map { b => b.toInt }
     xwaveform.points = preamble.points
     xwaveform.xIncrement= preamble.dblXIncrement
-    xwaveform.xReference = preamble.lngXReference
+    xwaveform.xReference = preamble.lngXReference.toDouble
     xwaveform.xOrigin= preamble.dblXOrigin
     xwaveform.yIncrement=preamble.sngYIncrement
     xwaveform.yOrigin= preamble.sngYOrigin
-    xwaveform.yReference= preamble.lngYReference
+    xwaveform.yReference= preamble.lngYReference.toDouble
 
     //println(s"Done waveform")
 

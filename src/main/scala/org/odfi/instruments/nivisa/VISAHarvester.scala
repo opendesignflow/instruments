@@ -3,7 +3,7 @@ package org.odfi.instruments.nivisa
 import org.bridj.BridJ
 import org.bridj.Pointer
 
-import com.idyria.osi.tea.os.OSDetector
+import org.odfi.tea.os.OSDetector
 
 import org.odfi.indesign.core.harvest.Harvester
 import org.odfi.instruments.nivisa.VisaLibrary

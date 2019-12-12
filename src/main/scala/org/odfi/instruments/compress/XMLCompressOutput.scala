@@ -6,9 +6,9 @@ import java.io.File
 trait XMLCompressOutput extends STAXSyncTrait {
   
   
-  override def toFile(f:File) = {
+  override def toFile(f:File, prefixes: Map[String, String] = Map[String, String]()) = {
     
-    toOutputStream(CompressModule.getFileCompressOutputStream(f))
+    toOutputStream(CompressModule.getFileCompressOutputStream(f),prefixes)
     
     this.staxPreviousFile = Some(f)
     

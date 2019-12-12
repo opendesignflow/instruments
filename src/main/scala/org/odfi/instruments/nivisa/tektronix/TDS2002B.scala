@@ -2,7 +2,7 @@ package org.odfi.instruments.nivisa.tektronix
 import java.io.{ByteArrayInputStream, File}
 import javax.imageio.ImageIO
 import java.io.File
-import com.idyria.osi.tea.io.TeaIOUtils
+import org.odfi.tea.io.TeaIOUtils
 import org.odfi.instruments.data.XWaveform
 import org.odfi.instruments.ieee.IEEE4882BinaryBlock
 import org.odfi.instruments.nivisa.VISADevice

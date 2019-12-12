@@ -3,7 +3,7 @@ package org.odfi.instruments.nivisa.keysight
 import java.io.{ByteArrayInputStream, File}
 import javax.imageio.ImageIO
 
-import com.idyria.osi.tea.io.TeaIOUtils
+import org.odfi.tea.io.TeaIOUtils
 import org.odfi.instruments.data.XWaveform
 import org.odfi.instruments.nivisa.VISADevice
 import org.odfi.instruments.nivisa.keysight.waveform.{Preamble, Waveform}

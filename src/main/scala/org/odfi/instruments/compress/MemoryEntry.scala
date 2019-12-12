@@ -4,7 +4,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipFile
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import java.lang.ref.SoftReference
-import com.idyria.osi.tea.io.TeaIOUtils
+import org.odfi.tea.io.TeaIOUtils
 
 trait MemoryArchiveEntry {
 
