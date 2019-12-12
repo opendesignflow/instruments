@@ -1,55 +1,67 @@
-// Instruments
+// TEA
 node {
  
-  properties([pipelineTriggers([[$class: 'GitHubPushTrigger']])])
-  def mvnHome = tool 'maven3'
+   //-- Github trigger
+    properties([pipelineTriggers([[$class: 'GitHubPushTrigger']])])
 
-  // Use JDK8 oracle
-  env.JAVA_HOME="${tool 'oracle-jdk8'}"
-  env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+    //-- JDK
+    jdk = tool name: 'adopt-jdk11'
+    env.JAVA_HOME = "${jdk}"
+
+    //-- Maven
+    def mvnHome = tool 'maven3'
+    mavenOptions="-B -U -up"
+
+  
+
+    
 
   stage('Clean') {
     checkout scm
-    sh "${mvnHome}/bin/mvn -B clean"
+    sh "${mvnHome}/bin/mvn -version"
+    sh "${mvnHome}/bin/mvn ${mavenOptions} clean"
   }
 
   stage('Build') {
-    sh "${mvnHome}/bin/mvn -B  compile test-compile"
+    sh "${mvnHome}/bin/mvn ${mavenOptions}  compile test-compile"
   }
 
   stage('Test') {
-
-    if (env.BRANCH_NAME == 'master') {
-      sh "${mvnHome}/bin/mvn -B  test"
-    } else {
-      sh "${mvnHome}/bin/mvn -B -Dmaven.test.failure.ignore test"
-    }
-    //junit '**/target/surefire-reports/TEST-*.xml'
+    sh "${mvnHome}/bin/mvn ${mavenOptions}  -Dmaven.test.failure.ignore test"
+    junit '**/target/surefire-reports/TEST-*.xml'
   }
 
   if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'master') {
+	  
+	  stage('Deploy') {
+      configFileProvider(
+          [configFile(fileId: '040c946b-486d-4799-97a0-e92a4892e372', variable: 'MAVEN_SETTINGS')]) {
+          //sh 'mvn -s $MAVEN_SETTINGS clean package'
+          mavenOptions="$mavenOptions -s $MAVEN_SETTINGS"
+  
+          sh "${mvnHome}/bin/mvn ${mavenOptions} -DskipTests=true deploy"
+      }
+		  step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
+	  }
 
-    stage('Deploy') {
-        sh "${mvnHome}/bin/mvn -B -DskipTests=true -Dmaven.test.failure.ignore deploy"
-        step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
-    }
-
-    stage("Deploy Documentation") {
-
-        sh "make -C doc html"
-        sh "mkdir -p /data/cd/org.odfi.instruments/instruments-core/${env.BRANCH_NAME}/doc/"
-        sh "cp -Rf doc/build/html/* /data/cd/org.odfi.instruments/instruments-core/${env.BRANCH_NAME}/doc/"
-        
+    // Trigger sub builds on dev
+    if (env.BRANCH_NAME == 'dev') {
+      stage("Downstream") { 
+       // build job: '../ooxoo-core/dev', wait: false, propagate: false
+      } 
+      
     }
 
   } else {
+	  
     stage('Package') {
-        sh "${mvnHome}/bin/mvn -B -DskipTests=true -Dmaven.test.failure.ignore package"
+        sh "${mvnHome}/bin/mvn ${mavenOptions} -Dmaven.test.failure.ignore package"
         step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
     }
+	
   }
 
- 
+  
 
 
 }
