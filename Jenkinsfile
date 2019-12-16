@@ -35,7 +35,7 @@ node {
 
   stage('Test') {
     sh "${mvnHome}/bin/mvn ${mavenOptions}  -Dmaven.test.failure.ignore test"
-    junit '**/target/surefire-reports/TEST-*.xml'
+    junit testResults:'**/target/surefire-reports/TEST-*.xml', allowEmptyResults: true 
   }
 
   if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'master') {
