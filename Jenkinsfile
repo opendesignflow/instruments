@@ -1,4 +1,11 @@
-// TEA
+// Start Build Step function
+def transformIntoStep(jobFullName) {
+    return {
+       build job: jobFullName , wait: false, propagate: false
+    }
+}
+
+// Instruments
 node {
  
    //-- Github trigger
@@ -34,23 +41,34 @@ node {
   if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'master') {
 	  
 	  stage('Deploy') {
-      configFileProvider(
+     /* configFileProvider(
           [configFile(fileId: '040c946b-486d-4799-97a0-e92a4892e372', variable: 'MAVEN_SETTINGS')]) {
           //sh 'mvn -s $MAVEN_SETTINGS clean package'
           mavenOptions="$mavenOptions -s $MAVEN_SETTINGS"
   
-          sh "${mvnHome}/bin/mvn ${mavenOptions} -DskipTests=true deploy"
-      }
+          
+      }*/
+      sh "${mvnHome}/bin/mvn ${mavenOptions} -DskipTests=true deploy"
 		  step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
 	  }
 
     // Trigger sub builds on dev
     if (env.BRANCH_NAME == 'dev') {
-      stage("Downstream") { 
-       // build job: '../ooxoo-core/dev', wait: false, propagate: false
-      } 
+      stage('Downstream') {
+
+        def downstreams = ['../ioda-core/dev']
+        def stepsForParallel = [:]
+        for (x in downstreams) {
+          def ds = x 
+          stepsForParallel[ds] = transformIntoStep(ds) 
+        }
       
+        parallel stepsForParallel
+
+      }
+
     }
+    // EOF Downstream
 
   } else {
 	  
