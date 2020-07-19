@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.odfi.instruments</groupId>
     <artifactId>instruments-core</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.3.1</version>
     <name>Instruments Interface</name>
     <parent>
         <groupId>org.odfi</groupId>
@@ -12,7 +12,7 @@
     </parent>
 
     <properties>
-        <ooxoo.version>3.4.0</ooxoo.version>
+        <ooxoo.version>3.4.1</ooxoo.version>
     </properties>
 
     <!-- Project INfos -->
