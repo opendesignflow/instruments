@@ -1,15 +1,18 @@
 package org.odfi.instruments.nivisa
 
-import org.odfi.indesign.module.measurement.MeasurementDevice
+
 import org.odfi.instruments.nivisa.VisaLibrary
 import org.bridj.Pointer
 import java.io.ByteArrayOutputStream
 
 import org.odfi.instruments.ieee.IEEE4882BinaryBlock
+
 import scala.io.Source
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
+
+import org.odfi.indesign.core.module.measurement.MeasurementDevice
 
 class VISADevice(val deviceString: String) extends MeasurementDevice {
 

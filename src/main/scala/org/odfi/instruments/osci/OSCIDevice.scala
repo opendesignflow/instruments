@@ -1,6 +1,6 @@
 package org.odfi.instruments.osci
 
-import org.odfi.indesign.module.measurement.MeasurementDevice
+import org.odfi.indesign.core.module.measurement.MeasurementDevice
 import org.odfi.instruments.data.XWaveform
 import org.odfi.indesign.core.harvest.Harvester
 
