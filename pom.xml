@@ -3,17 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.odfi.instruments</groupId>
     <artifactId>instruments-core</artifactId>
-    <version>1.3.2-SNAPSHOT/version>
+    <version>1.3.2-SNAPSHOT</version>
         <name>Instruments Interface</name>
-        <parent>
-            <groupId>org.odfi</groupId>
-            <artifactId>superpom-scala</artifactId>
-            <version>2.13.3.r2</version>
-        </parent>
 
-        <properties>
-            <ooxoo.version>3.4.1</ooxoo.version>
-        </properties>
 
         <!-- Project INfos -->
         <!-- ### -->
@@ -33,11 +25,6 @@
             </developer>
         </developers>
 
-        <scm>
-            <connection>scm:git:https://github.com/opendesignflow/instruments.git</connection>
-            <developerConnection>scm:git:git@github.com:opendesignflow/instruments.git</developerConnection>
-            <url>https://github.com/opendesignflow/instruments</url>
-        </scm>
 
         <build>
 
@@ -52,20 +39,6 @@
 
 
             <plugins>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-ooxoo-plugin</artifactId>
-                    <version>${ooxoo.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>generate</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
 
                 <!-- Generate native interfaces -->
                 <plugin>
@@ -82,48 +55,6 @@
                     </executions>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.2.0</version>
-                    <executions>
-                        <execution>
-                            <id>add-source</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>add-source</goal>
-                            </goals>
-                            <configuration>
-                                <sources>
-                                    <source>${project.build.directory}/generated-sources/java</source>
-                                    <source>${project.build.directory}/generated-sources/scala</source>
-                                    <source>src/examples/scala</source>
-                                    <source>src/main/java</source>
-                                </sources>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <phase>pre-site</phase>
-                            <goals>
-                                <goal>add-source</goal>
-                            </goals>
-                            <configuration>
-                                <sources>
-                                    <source>${project.build.directory}/generated-sources/java</source>
-                                    <source>${project.build.directory}/generated-sources/scala</source>
-                                    <source>src/examples/scala</source>
-                                </sources>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <!-- <plugin> -->
-                <!-- <groupId>org.apache.maven.plugins</groupId> -->
-                <!-- <artifactId>maven-site-plugin</artifactId> -->
-                <!-- <version>${site.plugin.version}</version> -->
-
-                <!-- </plugin> -->
 
             </plugins>
         </build>

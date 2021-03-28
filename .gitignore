@@ -1,4 +1,6 @@
-/target/
+target/*
+.gradle/*
+build/*
 doc/build/
 .cache-main
 .cache-tests
